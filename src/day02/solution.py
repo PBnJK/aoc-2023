@@ -33,64 +33,58 @@ def get_games():
 			games[num].append(game_pairs)
 	
 	return games
+
+def get_color_amount_in_games():
+	NUMBER_IDX: int = 0
+	COLOR_IDX : int = 1
 	
+	amounts = {}
+	
+	games = get_games()
+	
+	for g in games:
+		red_amnt  : int = 0
+		green_amnt: int = 0
+		blue_amnt : int = 0
+		
+		for round in games[g]:			
+			for pair in round:
+				if pair[COLOR_IDX] == 'red':
+					red_amnt = max( int(pair[NUMBER_IDX]), red_amnt )
+					
+				elif pair[COLOR_IDX] == 'green':
+					green_amnt = max( int(pair[NUMBER_IDX]), green_amnt )
+					
+				elif pair[COLOR_IDX] == 'blue':
+					blue_amnt = max( int(pair[NUMBER_IDX]), blue_amnt )
+		
+		amounts[g] = [red_amnt, green_amnt, blue_amnt]
+	
+	return amounts
+
 def solution1():
 	MAX_RED  : int = 12
 	MAX_GREEN: int = 13
 	MAX_BLUE : int = 14
 	
-	NUMBER_IDX: int = 0
-	COLOR_IDX : int = 1
-	
-	games = get_games()
-	
 	id_sum: int = 0
+	amounts = get_color_amount_in_games()
 	
-	for g in games:
-		red_amnt  : int = 0
-		green_amnt: int = 0
-		blue_amnt : int = 0
+	for a in amounts:
+		rgb = amounts[a]
 		
-		for round in games[g]:			
-			for pair in round:
-				if pair[COLOR_IDX] == 'red':
-					red_amnt = max( int(pair[NUMBER_IDX]), red_amnt )
-					
-				elif pair[COLOR_IDX] == 'green':
-					green_amnt = max( int(pair[NUMBER_IDX]), green_amnt )
-					
-				elif pair[COLOR_IDX] == 'blue':
-					blue_amnt = max( int(pair[NUMBER_IDX]), blue_amnt )
-			
-		if red_amnt <= MAX_RED and green_amnt <= MAX_GREEN and blue_amnt <= MAX_BLUE:
-			id_sum += g
+		if rgb[0] <= MAX_RED and rgb[1] <= MAX_GREEN and rgb[2] <= MAX_BLUE:
+			id_sum += a
 				 
 	return id_sum
  
 def solution2(): 
-	NUMBER_IDX: int = 0
-	COLOR_IDX : int = 1
-	
-	games = get_games()
-	
 	cube_set_power: int = 0
 	
-	for g in games:
-		red_amnt  : int = 0
-		green_amnt: int = 0
-		blue_amnt : int = 0
-		
-		for round in games[g]:			
-			for pair in round:
-				if pair[COLOR_IDX] == 'red':
-					red_amnt = max( int(pair[NUMBER_IDX]), red_amnt )
-					
-				elif pair[COLOR_IDX] == 'green':
-					green_amnt = max( int(pair[NUMBER_IDX]), green_amnt )
-					
-				elif pair[COLOR_IDX] == 'blue':
-					blue_amnt = max( int(pair[NUMBER_IDX]), blue_amnt )
-			
-		cube_set_power += red_amnt * green_amnt * blue_amnt
+	amounts = get_color_amount_in_games()
+	
+	for a in amounts:
+		rgb = amounts[a]
+		cube_set_power += rgb[0] * rgb[1] * rgb[2]
 				 
 	return cube_set_power
